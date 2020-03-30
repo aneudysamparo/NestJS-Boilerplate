@@ -69,6 +69,18 @@ export class AuthController {
         return createdUser.toDto();
     }
 
+    @Post('register-no-avatar')
+    @HttpCode(HttpStatus.OK)
+    @ApiOkResponse({ type: UserDto, description: 'Successfully Registered' })
+    async userRegisterNoAvatar(
+        @Body() userRegisterDto: UserRegisterDto
+    ): Promise<UserDto> {
+        const createdUser = await this.userService.createUserNoAvatar( userRegisterDto );
+        return createdUser.toDto();
+    }
+
+
+
     @Get('me')
     @HttpCode(HttpStatus.OK)
     @UseGuards(AuthGuard)

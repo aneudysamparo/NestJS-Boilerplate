@@ -9,7 +9,6 @@ import {
     IsOptional,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { Column } from 'typeorm';
 
 export class UserRegisterDto {
     @IsString()
@@ -33,8 +32,7 @@ export class UserRegisterDto {
     @ApiProperty({ minLength: 6 })
     readonly password: string;
 
-    @Column()
-    @IsPhoneNumber('ZZ')
+    @IsPhoneNumber('US')
     @IsOptional()
     @ApiProperty()
     phone: string;

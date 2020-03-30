@@ -44,6 +44,14 @@ export class UserService {
         return queryBuilder.getOne();
     }
 
+    async createUserNoAvatar(
+        userRegisterDto: UserRegisterDto,
+    ): Promise<UserEntity> {
+        const user = this.userRepository.create({ ...userRegisterDto });
+
+        return this.userRepository.save(user);
+    }
+
     async createUser(
         userRegisterDto: UserRegisterDto,
         file: IFile,
