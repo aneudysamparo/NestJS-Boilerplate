@@ -1,50 +1,39 @@
 import { ValidationPipe, ClassSerializerInterceptor } from '@nestjs/common';
 import { NestFactory, Reflector } from '@nestjs/core';
 import { Transport } from '@nestjs/microservices';
-import {
-    NestExpressApplication,
-    ExpressAdapter,
-} from '@nestjs/platform-express';
+import { NestExpressApplication } from '@nestjs/platform-express';
 import * as compression from 'compression';
 import * as RateLimit from 'express-rate-limit';
 import * as helmet from 'helmet';
 import * as morgan from 'morgan';
-import {
-    initializeTransactionalContext,
-    patchTypeORMRepositoryWithBaseRepository,
-} from 'typeorm-transactional-cls-hooked';
 
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './filters/bad-request.filter';
-import { QueryFailedFilter } from './filters/query-failed.filter';
 import { ConfigService } from './shared/services/config.service';
 import { SharedModule } from './shared/shared.module';
 import { setupSwagger } from './viveo-swagger';
 
+declare const module: any;
+
 async function bootstrap() {
-    initializeTransactionalContext();
-    patchTypeORMRepositoryWithBaseRepository();
-    const app = await NestFactory.create<NestExpressApplication>(
-        AppModule,
-        new ExpressAdapter(),
-        { cors: true },
-    );
+    const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+        cors: true,
+        bodyParser: true,
+    });
     app.enable('trust proxy'); // only if you're behind a reverse proxy (Heroku, Bluemix, AWS ELB, Nginx, etc)
     app.use(helmet());
-
-    app.use(RateLimit({
-        windowMs: 15 * 60 * 1000, // 15 minutes
-        max: 100, // limit each IP to 100 requests per windowMs
-    }),);
+    app.use(
+        RateLimit({
+            windowMs: 15 * 60 * 1000, // 15 minutes
+            max: 100, // limit each IP to 100 requests per windowMs
+        }),
+    );
     app.use(compression());
     app.use(morgan('combined'));
 
     const reflector = app.get(Reflector);
 
-    app.useGlobalFilters(
-        new HttpExceptionFilter(reflector),
-        new QueryFailedFilter(reflector),
-    );
+    app.useGlobalFilters(new HttpExceptionFilter(reflector));
 
     app.useGlobalInterceptors(new ClassSerializerInterceptor(reflector));
 
@@ -80,6 +69,11 @@ async function bootstrap() {
     await app.listen(port);
 
     console.info(`server running on port ${port}`);
+
+    if (module.hot) {
+        module.hot.accept();
+        module.hot.dispose(() => app.close());
+    }
 }
 
 bootstrap();
