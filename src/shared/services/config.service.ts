@@ -1,4 +1,6 @@
 import * as dotenv from 'dotenv';
+import * as fs from 'fs';
+import * as path from 'path';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 
 import { IAwsConfig } from '../../interfaces/IAwsConfig';
@@ -80,5 +82,9 @@ export class ConfigService {
             secretAccessKey: this.get('AWS_S3_SECRET_ACCESS_KEY'),
             bucketName: this.get('S3_BUCKET_NAME'),
         };
+    }
+
+    public jwtRsaKey(key: string): string {
+        return fs.readFileSync(path.resolve(this.get(key)), 'utf8').replace(/\\n/gm, '\n')
     }
 }
