@@ -1,8 +1,8 @@
 # NestJS v7 Boilerplate
 
-[![Awesome NestJS](https://img.shields.io/badge/Awesome-NestJS-blue.svg?longCache=true&style=flat-square)](https://github.com/juliandavidmr/awesome-nestjs)
+[![NestJS Boilerplate](https://img.shields.io/badge/NestJS-Boilerplate-blue.svg?longCache=true&style=flat-square)](https://github.com/aneudysamparo/NestJS-Boilerplate)
 
-> This is an ever-evolving, very opinionated architecture and dev environment for new node projects using [NestJS](https://nestjs.com). Based on [Awesome NestJS](https://github.com/juliandavidmr/awesome-nestjs) 😄
+> This is an ever-evolving, very opinionated architecture and dev environment for new node projects using [NestJS](https://nestjs.com). Based on [Awesome NestJS](https://github.com/NarHakobyan/awesome-nest-boilerplate) 😄
 
 ## Getting started
 
