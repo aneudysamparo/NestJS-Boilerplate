@@ -1,5 +1,7 @@
 import { JwtService } from '@nestjs/jwt';
 import { Injectable } from '@nestjs/common';
+import { Algorithm } from 'jsonwebtoken';
+import * as uuid from 'uuid';
 
 import { ConfigService } from '../../shared/services/config.service';
 import { UserEntity } from '../user/user.entity';
@@ -22,9 +24,32 @@ export class AuthService {
     ) {}
 
     async createToken(user: UserEntity | UserDto): Promise<TokenPayloadDto> {
+        const signOpts = {
+            expiresIn: this.configService.getNumber('JWT_EXPIRATION_TIME'),
+            algorithm: 'RS256' as Algorithm,
+            keyid: user.id,
+            audience: [
+                'http://localhost:3100',
+                'http://localhost:3200',
+                'http://localhost:3300',
+            ],
+            subject: user.id,
+            issuer: 'http://localhost:3000',
+            jwtid: uuid.v1(),
+        };
         return new TokenPayloadDto({
             expiresIn: this.configService.getNumber('JWT_EXPIRATION_TIME'),
-            accessToken: await this.jwtService.signAsync({ id: user.id }),
+            accessToken: await this.jwtService.signAsync(
+                {
+                    id: user.id,
+                    firstName: user.firstName,
+                    lastName: user.lastName,
+                    role: user.role,
+                    email: user.email,
+                    avatar: user.avatar,
+                },
+                signOpts,
+            ),
         });
     }
 

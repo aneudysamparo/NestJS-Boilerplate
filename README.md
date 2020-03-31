@@ -20,6 +20,17 @@ npm install
 npm run start
 
 # 5. Read the documentation linked below for "Setup and development".
+
+# 6. Generate new private/public keys (optional)
+ssh-keygen -t rsa -b 4096 -m PEM -f jwtRS256.key
+# Don't add passphrase
+
+openssl rsa -in jwtRS256.key -pubout -outform PEM -out jwtRS256.key.pub
+
+# Use the output on console
+cat jwtRS256.key
+cat jwtRS256.key.pub
+
 ```
 
 ## Features
@@ -31,8 +42,8 @@ npm run start
   <dt><b>Instant feedback</b></dt>
   <dd>Enjoy the best DX (Developer eXperience) and code your app at the speed of thought! Your saved changes are reflected instantaneously.</dd>
 
-  <dt><b>JWT Authentication</b></dt>
-  <dd>Installed and configured JWT authentication.</dd>
+  <dt><b>JWT Authentication with RSA Algorithm</b></dt>
+  <dd>Installed and configured JWT authentication for more protection</dd>
 
   <dt><b>Next generation Typescript</b></dt>
   <dd>Always up to date typescript version.</dd>
@@ -53,3 +64,5 @@ npm run start
 ## Documentation
 
 Coming soon...
+
+

@@ -4,6 +4,8 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 
 import { ConfigService } from '../../shared/services/config.service';
 import { UserService } from '../user/user.service';
+import * as fs from 'fs';
+import * as path from 'path';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -13,7 +15,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     ) {
         super({
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-            secretOrKey: configService.get('JWT_SECRET_KEY'),
+            //secretOrKey: configService.get('JWT_SECRET_KEY'),
+            secretOrKey: {
+                key: fs.readFileSync(path.resolve('Keys/jwtRS256.key.pub'), 'utf8').replace(/\\n/gm, '\n')
+            },
+            algorithms: ['RS256'],
         });
     }
 
