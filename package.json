@@ -56,7 +56,7 @@
     "rxjs": "^6.5.4",
     "source-map-support": "^0.5.16",
     "swagger-ui-express": "^4.1.4",
-    "typeorm": "^0.2.24",
+    "typeorm": "^0.2.25",
     "typeorm-transactional-cls-hooked": "^0.1.12",
     "uuid": "^7.0.2"
   },
